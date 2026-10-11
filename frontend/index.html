@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TextLab · Analiză NLP</title>
+<style>
+  :root {
+    --bg: #0b1020; --card: #131a2e; --line: #243049;
+    --text: #e6ebf5; --muted: #8b97b3;
+    --accent: #7c5cff; --accent2: #22d3ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at 15% 0%, #1a1f4a 0%, var(--bg) 45%);
+    color: var(--text); min-height: 100vh;
+  }
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(8px); position: sticky; top: 0; background: #0b1020cc;
+  }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: .5px; }
+  .logo span { background: linear-gradient(90deg, var(--accent), var(--accent2));
+               -webkit-background-clip: text; color: transparent; }
+  .links { display: flex; gap: 8px; }
+  .links a { padding: 8px 14px; border-radius: 8px; color: var(--muted);
+             text-decoration: none; font-size: 14px; }
+  .links a.active { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+  .links a.soon::after { content: "curând"; margin-left: 6px; font-size: 10px;
+             background: var(--line); padding: 2px 6px; border-radius: 10px; }
+  main { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; }
+  .hero h1 { font-size: 40px; margin: 0 0 8px; }
+  .hero h1 span { background: linear-gradient(90deg, var(--accent), var(--accent2));
+                  -webkit-background-clip: text; color: transparent; }
+  .hero p { color: var(--muted); font-size: 17px; margin: 0 0 32px; max-width: 640px; }
+  .card { background: var(--card); border: 1px solid var(--line);
+          border-radius: 16px; padding: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .field-head { display: flex; justify-content: space-between; align-items: center;
+                margin-bottom: 8px; color: var(--muted); font-size: 14px; }
+  .field-head b { color: var(--text); font-size: 15px; }
+  textarea {
+    width: 100%; height: 200px; background: #0d1326; color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+    font-size: 15px; resize: vertical; font-family: inherit;
+  }
+  textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .file-btn { cursor: pointer; color: var(--accent2); font-size: 13px; }
+  .file-btn input { display: none; }
+  .actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  button {
+    padding: 12px 26px; border-radius: 10px; border: 1px solid var(--line);
+    background: transparent; color: var(--text); font-size: 15px; cursor: pointer;
+  }
+  button.primary { background: linear-gradient(90deg, var(--accent), #5b8cff);
+                   border: none; font-weight: 600; }
+  button:hover { filter: brightness(1.15); }
+  select {
+    padding: 12px; border-radius: 10px; background: #0d1326; color: var(--text);
+    border: 1px solid var(--line); font-size: 15px; cursor: pointer;
+  }
+  #error { color: #ff6b81; margin-top: 12px; min-height: 20px; }
+  #result { display: none; margin-top: 28px; }
+  .res-top { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+  .gauge {
+    --p: 0; width: 160px; height: 160px; border-radius: 50%; flex-shrink: 0;
+    background: conic-gradient(var(--accent2) calc(var(--p) * 1%), #1e2742 0);
+    display: grid; place-items: center;
+  }
+  .gauge div { width: 124px; height: 124px; border-radius: 50%; background: var(--card);
+               display: grid; place-items: center; font-size: 32px; font-weight: 800; }
+  .verdict { font-size: 24px; font-weight: 700; }
+  #langs { color: var(--muted); margin-top: 6px; }
+  .stats { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .stat { background: #0d1326; border: 1px solid var(--line); border-radius: 10px;
+          padding: 10px 16px; font-size: 13px; color: var(--muted); }
+  .stat b { display: block; font-size: 20px; color: var(--text); }
+  h3 { margin: 28px 0 10px; font-size: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: #7c5cff22; border: 1px solid #7c5cff66; color: #c9bfff;
+          padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .compare-view { white-space: pre-wrap; line-height: 1.6; background: #0d1326;
+                  border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+                  font-size: 14px; max-height: 260px; overflow: auto; }
+  mark { background: #22d3ee33; color: #7ff0ff; border-radius: 4px; padding: 0 2px; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Text<span>Lab</span></div>
+  <div class="links">
+    <a href="#" class="active">Comparator</a>
+    <a href="#" class="soon">Cuvinte-cheie</a>
+    <a href="#" class="soon">Istoric</a>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <h1>Compară texte cu <span>NLP</span></h1>
+    <p>Vezi cât de asemănătoare sunt două texte, folosind TF-IDF și similaritate cosinus.
+       Suportă română, engleză și rusă, cu detectare automată a limbii.</p>
+  </section>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <div class="field-head"><b>Text A</b>
+          <label class="file-btn">📄 Încarcă .txt
+            <input type="file" accept=".txt" onchange="loadFile(event, 'a')"></label></div>
+        <textarea id="a" placeholder="Lipește sau scrie primul text..."></textarea>
+      </div>
+      <div>
+        <div class="field-head"><b>Text B</b>
+          <label class="file-btn">📄 Încarcă .txt
+            <input type="file" accept=".txt" onchange="loadFile(event, 'b')"></label></div>
+        <textarea id="b" placeholder="Lipește sau scrie al doilea text..."></textarea>
+      </div>
+    </div>
+    <div class="actions">
+      <select id="lang">
+        <option value="auto">🌐 Limbă: automat</option>
+      </select>
+      <button class="primary" onclick="compare()">Compară textele</button>
+      <button onclick="fillExample()">Exemplu</button>
+      <button onclick="clearAll()">Golește</button>
+    </div>
+    <div id="error"></div>
+  </div>
+
+  <div id="result" class="card">
+    <div class="res-top">
+      <div class="gauge" id="gauge"><div id="percent">0%</div></div>
+      <div>
+        <div class="verdict" id="verdict"></div>
+        <div id="langs"></div>
+        <div class="stats">
+          <div class="stat"><b id="s-a">0</b>cuvinte în A</div>
+          <div class="stat"><b id="s-b">0</b>cuvinte în B</div>
+          <div class="stat"><b id="s-c">0</b>cuvinte comune</div>
+        </div>
+      </div>
+    </div>
+    <h3>Cuvinte comune</h3>
+    <div class="chips" id="chips"></div>
+    <h3>Textele cu cuvintele comune evidențiate</h3>
+    <div class="grid">
+      <div class="compare-view" id="view-a"></div>
+      <div class="compare-view" id="view-b"></div>
+    </div>
+  </div>
+</main>
+<footer>TextLab · proiect de practică · Python, FastAPI, scikit-learn</footer>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const norm = s => s.toLowerCase().normalize("NFD")
+    .replace(/([a-z])[\u0300-\u036f]+/g, "$1")
+    .normalize("NFC").replace(/ё/g, "е");
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  fetch("/api/languages").then(r => r.json()).then(list => {
+    list.forEach(l => $("lang").insertAdjacentHTML("beforeend",
+      `<option value="${l.code}">${l.name}</option>`));
+  });
+
+  function loadFile(e, id) {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => $(id).value = r.result;
+    r.readAsText(f);
+  }
+
+  function fillExample() {
+    $("a").value = "Inteligența artificială schimbă modul în care lucrăm și învățăm. Tehnologiile noi ajută studenții să găsească informații mai repede.";
+    $("b").value = "Inteligența artificială schimbă felul în care învățăm și lucrăm. Studenții folosesc tehnologii noi pentru a găsi informații.";
+  }
+
+  function clearAll() {
+    $("a").value = ""; $("b").value = "";
+    $("result").style.display = "none"; $("error").textContent = "";
+  }
+
+  function highlight(text, commonSet) {
+    return text.split(/(\p{L}+)/gu).map(part =>
+      commonSet.has(norm(part)) ? "<mark>" + esc(part) + "</mark>" : esc(part)
+    ).join("");
+  }
+
+  function animate(target) {
+    let cur = 0;
+    const step = () => {
+      cur = Math.min(cur + Math.max(1, target / 30), target);
+      $("gauge").style.setProperty("--p", cur);
+      $("percent").textContent = Math.round(cur * 10) / 10 + "%";
+      if (cur < target) requestAnimationFrame(step);
+    };
+    step();
+  }
+
+  async function compare() {
+    $("error").textContent = "";
+    const body = { text_a: $("a").value, text_b: $("b").value, language: $("lang").value };
+    const res = await fetch("/api/compare", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) { $("error").textContent = data.detail; return; }
+
+    $("result").style.display = "block";
+    $("verdict").textContent = data.verdict;
+    $("langs").textContent = "Limbă: " + (data.languages.join(" + ") || "nedetectată");
+    $("s-a").textContent = data.stats.words_a;
+    $("s-b").textContent = data.stats.words_b;
+    $("s-c").textContent = data.stats.shared_unique;
+    $("chips").innerHTML = data.common_words.length
+      ? data.common_words.map(w => `<span class="chip">${esc(w)}</span>`).join("")
+      : "<span style='color:#8b97b3'>Niciun cuvânt comun.</span>";
+
+    const set = new Set(data.common_words);
+    $("view-a").innerHTML = highlight(body.text_a, set);
+    $("view-b").innerHTML = highlight(body.text_b, set);
+    animate(data.similarity);
+    $("result").scrollIntoView({ behavior: "smooth" });
+  }
+</script>
+</body>
+</html>
