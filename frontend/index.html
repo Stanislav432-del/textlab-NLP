@@ -79,6 +79,14 @@
           padding: 10px 16px; font-size: 13px; color: var(--muted); }
   .stat b { display: block; font-size: 20px; color: var(--text); }
   h3 { margin: 28px 0 10px; font-size: 16px; }
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .methods { grid-template-columns: 1fr; } }
+  .method { background: #0d1326; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .method .name { color: var(--muted); font-size: 13px; }
+  .method .val { font-size: 26px; font-weight: 800; margin: 4px 0; }
+  .bar { height: 8px; background: #1e2742; border-radius: 4px; overflow: hidden; }
+  .bar div { height: 100%; width: 0; transition: width .6s; }
+  .method .info { color: var(--muted); font-size: 12px; margin-top: 8px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { background: #7c5cff22; border: 1px solid #7c5cff66; color: #c9bfff;
           padding: 4px 12px; border-radius: 20px; font-size: 13px; }
@@ -102,7 +110,7 @@
 <main>
   <section class="hero">
     <h1>Compară texte cu <span>NLP</span></h1>
-    <p>Vezi cât de asemănătoare sunt două texte, folosind TF-IDF și similaritate cosinus.
+    <p>Vezi cât de asemănătoare sunt două texte, folosind două metode: TF-IDF cu similaritate cosinus și distanța Levenshtein.
        Suportă română, engleză și rusă, cu detectare automată a limbii.</p>
   </section>
 
@@ -143,6 +151,21 @@
           <div class="stat"><b id="s-b">0</b>cuvinte în B</div>
           <div class="stat"><b id="s-c">0</b>cuvinte comune</div>
         </div>
+      </div>
+    </div>
+    <h3>Comparația metodelor</h3>
+    <div class="methods">
+      <div class="method">
+        <div class="name">TF-IDF + similaritate cosinus</div>
+        <div class="val" id="m-cos">0%</div>
+        <div class="bar"><div id="bar-cos" style="background: var(--accent2)"></div></div>
+        <div class="info">Compară ce cuvinte apar și cât de des. <span id="t-cos"></span></div>
+      </div>
+      <div class="method">
+        <div class="name">Distanța Levenshtein</div>
+        <div class="val" id="m-lev">0%</div>
+        <div class="bar"><div id="bar-lev" style="background: var(--accent)"></div></div>
+        <div class="info">Compară literă cu literă. <span id="d-lev"></span> <span id="t-lev"></span></div>
       </div>
     </div>
     <h3>Cuvinte comune</h3>
@@ -223,6 +246,14 @@
       ? data.common_words.map(w => `<span class="chip">${esc(w)}</span>`).join("")
       : "<span style='color:#8b97b3'>Niciun cuvânt comun.</span>";
 
+    $("m-cos").textContent = data.similarity + "%";
+    $("m-lev").textContent = data.levenshtein.similarity + "%";
+    $("bar-cos").style.width = data.similarity + "%";
+    $("bar-lev").style.width = data.levenshtein.similarity + "%";
+    $("d-lev").textContent = "Modificări necesare: " + data.levenshtein.distance + ".";
+    $("t-cos").textContent = "Timp: " + data.time_ms.cosine + " ms";
+    $("t-lev").textContent = "Timp: " + data.time_ms.levenshtein + " ms";
+
     const set = new Set(data.common_words);
     $("view-a").innerHTML = highlight(body.text_a, set);
     $("view-b").innerHTML = highlight(body.text_b, set);
@@ -231,4 +262,4 @@
   }
 </script>
 </body>
-</html>
+</html>

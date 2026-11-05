@@ -1,0 +1,25 @@
+[
+  {"category": "identice", "a": "Inteligența artificială schimbă modul în care lucrăm și învățăm.", "b": "Inteligența artificială schimbă modul în care lucrăm și învățăm."},
+  {"category": "identice", "a": "Chișinăul este capitala Republicii Moldova și cel mai mare oraș din țară.", "b": "Chișinăul este capitala Republicii Moldova și cel mai mare oraș din țară."},
+  {"category": "identice", "a": "Bazele de date relaționale păstrează informația în tabele legate între ele prin chei.", "b": "Bazele de date relaționale păstrează informația în tabele legate între ele prin chei."},
+  {"category": "identice", "a": "Studenții au prezentat proiectele la sfârșitul semestrului în fața comisiei.", "b": "Studenții au prezentat proiectele la sfârșitul semestrului în fața comisiei."},
+  {"category": "identice", "a": "Algoritmul de sortare rapidă împarte lista în două părți în jurul unui element pivot.", "b": "Algoritmul de sortare rapidă împarte lista în două părți în jurul unui element pivot."},
+
+  {"category": "modificari mici", "a": "Inteligența artificială schimbă modul în care lucrăm și învățăm.", "b": "Inteligenta artificiala schimba modul in care lucram si invatam!"},
+  {"category": "modificari mici", "a": "Chișinăul este capitala Republicii Moldova și cel mai mare oraș din țară.", "b": "Chișinăul este capitala Republicii Moldova și cel mai mare orș din țara."},
+  {"category": "modificari mici", "a": "Bazele de date relaționale păstrează informația în tabele legate între ele prin chei.", "b": "Bazele de date relaționale păstrează datele în tabele legate între ele prin chei."},
+  {"category": "modificari mici", "a": "Studenții au prezentat proiectele la sfârșitul semestrului în fața comisiei.", "b": "Studenții au prezentat proiectele lor la finalul semestrului în fața comisiei."},
+  {"category": "modificari mici", "a": "Algoritmul de sortare rapidă împarte lista în două părți în jurul unui element pivot.", "b": "Algoritmul de sortare rapidă împarte lista în doua parti in jurul unui pivot."},
+
+  {"category": "reformulate", "a": "Inteligența artificială schimbă modul în care lucrăm și învățăm.", "b": "Felul în care învățăm și lucrăm este schimbat de inteligența artificială."},
+  {"category": "reformulate", "a": "Chișinăul este capitala Republicii Moldova și cel mai mare oraș din țară.", "b": "Cel mai mare oraș al Republicii Moldova este Chișinăul, care este și capitala țării."},
+  {"category": "reformulate", "a": "Bazele de date relaționale păstrează informația în tabele legate între ele prin chei.", "b": "Prin chei, tabelele sunt legate între ele, iar informația se păstrează în baze de date relaționale."},
+  {"category": "reformulate", "a": "Studenții au prezentat proiectele la sfârșitul semestrului în fața comisiei.", "b": "În fața comisiei, la sfârșitul semestrului, proiectele au fost prezentate de studenți."},
+  {"category": "reformulate", "a": "Algoritmul de sortare rapidă împarte lista în două părți în jurul unui element pivot.", "b": "În jurul unui element pivot, lista este împărțită în două părți de algoritmul de sortare rapidă."},
+
+  {"category": "diferite", "a": "Inteligența artificială schimbă modul în care lucrăm și învățăm.", "b": "Vara aceasta am mers cu prietenii la mare și am stat o săptămână."},
+  {"category": "diferite", "a": "Chișinăul este capitala Republicii Moldova și cel mai mare oraș din țară.", "b": "Pentru o prăjitură bună ai nevoie de ouă, făină, zahăr și unt."},
+  {"category": "diferite", "a": "Bazele de date relaționale păstrează informația în tabele legate între ele prin chei.", "b": "Echipa de fotbal a câștigat meciul în ultimul minut, după o pasă lungă."},
+  {"category": "diferite", "a": "Studenții au prezentat proiectele la sfârșitul semestrului în fața comisiei.", "b": "Pisica doarme toată ziua pe pervaz, la soare, lângă ghiveciul cu flori."},
+  {"category": "diferite", "a": "Algoritmul de sortare rapidă împarte lista în două părți în jurul unui element pivot.", "b": "Mâine va ploua în nordul țării, iar temperaturile vor scădea până la zece grade."}
+]

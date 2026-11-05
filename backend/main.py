@@ -1,4 +1,5 @@
 import re
+import time
 import unicodedata
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -8,6 +9,7 @@ from langdetect.lang_detect_exception import LangDetectException
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from backend import levenshtein
 from backend.languages import LANGUAGES
 
 DetectorFactory.seed = 0  # rezultate stabile la detectare
@@ -67,6 +69,7 @@ def compare(data: Texts):
     stop = sorted({normalize(w).strip() for c in codes
                    for w in LANGUAGES[c]["stop_words"]})
 
+    start = time.perf_counter()
     vectorizer = TfidfVectorizer(stop_words=stop or None)
     try:
         matrix = vectorizer.fit_transform([a, b])
@@ -74,6 +77,14 @@ def compare(data: Texts):
         raise HTTPException(status_code=400, detail="Textele sunt prea scurte.")
 
     score = float(cosine_similarity(matrix[0], matrix[1])[0][0])
+    time_cosine = (time.perf_counter() - start) * 1000
+
+    # Levenshtein pe textul normalizat, cu spațiile multiple strânse într-unul
+    start = time.perf_counter()
+    plain_a, plain_b = " ".join(a.split()), " ".join(b.split())
+    lev_distance = levenshtein.distance(plain_a, plain_b)
+    lev_score = levenshtein.similarity(plain_a, plain_b)
+    time_lev = (time.perf_counter() - start) * 1000
 
     words = vectorizer.get_feature_names_out()
     row_a, row_b = matrix[0].toarray()[0], matrix[1].toarray()[0]
@@ -92,6 +103,14 @@ def compare(data: Texts):
     return {
         "similarity": round(score * 100, 1),
         "verdict": verdict,
+        "levenshtein": {
+            "similarity": round(lev_score * 100, 1),
+            "distance": lev_distance,
+        },
+        "time_ms": {
+            "cosine": round(time_cosine, 2),
+            "levenshtein": round(time_lev, 2),
+        },
         "languages": [LANGUAGES[c]["name"] for c in sorted(codes)],
         "common_words": [w for w, _ in common],
         "stats": {
@@ -103,4 +122,4 @@ def compare(data: Texts):
 
 
 # trebuie să fie ULTIMA linie
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

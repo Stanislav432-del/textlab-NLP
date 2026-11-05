@@ -1,0 +1,21 @@
+nr,categorie,cosinus_%,levenshtein_%,distanta,timp_cosinus_ms,timp_levenshtein_ms
+1,identice,100.0,100.0,0,10.81,1.73
+2,identice,100.0,100.0,0,2.31,2.34
+3,identice,100.0,100.0,0,2.27,3.56
+4,identice,100.0,100.0,0,2.53,2.45
+5,identice,100.0,100.0,0,2.77,3.47
+6,modificari mici,100.0,100.0,0,2.57,2.12
+7,modificari mici,78.0,98.6,1,2.59,2.42
+8,modificari mici,82.0,89.3,9,2.29,3.07
+9,modificari mici,67.4,88.3,9,3.1,2.83
+10,modificari mici,91.4,90.5,8,2.55,3.23
+11,reformulate,50.3,30.6,50,9.63,2.37
+12,reformulate,78.0,48.8,42,2.5,2.63
+13,reformulate,62.0,34.4,63,2.74,5.02
+14,reformulate,55.9,28.9,59,2.34,2.9
+15,reformulate,83.5,37.2,59,2.18,3.79
+16,diferite,0.0,25.0,48,2.38,2.13
+17,diferite,0.0,29.2,51,2.45,1.94
+18,diferite,0.0,28.6,60,2.16,2.86
+19,diferite,0.0,22.7,58,3.27,2.51
+20,diferite,0.0,22.6,65,2.36,3.04
